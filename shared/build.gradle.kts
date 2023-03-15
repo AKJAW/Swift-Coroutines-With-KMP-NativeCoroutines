@@ -101,7 +101,7 @@ kotlin {
             isStatic = false // SwiftUI preview requires dynamic framework
             linkerOpts("-lsqlite3")
         }
-        ios.deploymentTarget = "12.4"
+        ios.deploymentTarget = "15.0"
         podfile = project.file("../ios/Podfile")
     }
 }
