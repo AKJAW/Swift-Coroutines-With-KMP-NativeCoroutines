@@ -7,7 +7,7 @@ targetSdk = "33"
 compileSdk = "33"
 
 # Dependencies
-android-gradle-plugin = "7.4.1"
+android-gradle-plugin = "7.2.0"
 ktlint-gradle = "11.2.0"
 gradle-versions = "0.42.0"
 
