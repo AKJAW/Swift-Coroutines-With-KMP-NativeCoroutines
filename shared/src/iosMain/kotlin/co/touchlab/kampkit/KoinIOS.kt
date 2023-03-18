@@ -31,7 +31,7 @@ actual val platformModule = module {
 
     single { Darwin.create() }
 
-    single { BreedCallbackViewModel(get(), getWith("BreedCallbackViewModel")) }
+    single { BreedKampkitCallbackViewModel(get(), getWith("BreedCallbackViewModel")) }
 }
 
 // Access from Swift to create a logger
@@ -41,5 +41,5 @@ fun Koin.loggerWithTag(tag: String) =
 
 @Suppress("unused") // Called from Swift
 object KotlinDependencies : KoinComponent {
-    fun getBreedViewModel() = getKoin().get<BreedCallbackViewModel>()
+    fun getBreedViewModel() = getKoin().get<BreedKampkitCallbackViewModel>()
 }

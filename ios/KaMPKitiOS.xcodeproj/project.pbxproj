@@ -13,6 +13,7 @@
 		46A5B60826B04921002EFEAA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46A5B60626B04920002EFEAA /* Main.storyboard */; };
 		46B5284D249C5CF400A7725D /* Koin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B5284C249C5CF400A7725D /* Koin.swift */; };
 		AEE7BA4D29C35A9600CE1EC2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE7BA4C29C35A9600CE1EC2 /* ContentView.swift */; };
+		AEE7BA4F29C609D600CE1EC2 /* KampkitCombineBreedListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE7BA4E29C609D600CE1EC2 /* KampkitCombineBreedListScreen.swift */; };
 		F1465F0123AA94BF0055F7C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1465F0023AA94BF0055F7C3 /* AppDelegate.swift */; };
 		F1465F0A23AA94BF0055F7C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1465F0923AA94BF0055F7C3 /* Assets.xcassets */; };
 		F1465F0D23AA94BF0055F7C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1465F0B23AA94BF0055F7C3 /* LaunchScreen.storyboard */; };
@@ -45,6 +46,7 @@
 		46A5B60726B04920002EFEAA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		46B5284C249C5CF400A7725D /* Koin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Koin.swift; sourceTree = "<group>"; };
 		AEE7BA4C29C35A9600CE1EC2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AEE7BA4E29C609D600CE1EC2 /* KampkitCombineBreedListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KampkitCombineBreedListScreen.swift; sourceTree = "<group>"; };
 		B859F3FB23133D22AB9DD835 /* Pods_KaMPKitiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KaMPKitiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED1F782AF3705197012D0C33 /* Pods-KaMPKitiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KaMPKitiOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KaMPKitiOS/Pods-KaMPKitiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		F1465EFD23AA94BF0055F7C3 /* KaMPKitiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KaMPKitiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,6 +142,7 @@
 				46A5B5EE26AF54F7002EFEAA /* BreedListScreen.swift */,
 				461C74A92788F5F3004B1FFC /* CombineAdapters.swift */,
 				AEE7BA4C29C35A9600CE1EC2 /* ContentView.swift */,
+				AEE7BA4E29C609D600CE1EC2 /* KampkitCombineBreedListScreen.swift */,
 			);
 			path = KaMPKitiOS;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				461C74AA2788F5F3004B1FFC /* CombineAdapters.swift in Sources */,
 				46A5B5EF26AF54F7002EFEAA /* BreedListScreen.swift in Sources */,
 				F1465F0123AA94BF0055F7C3 /* AppDelegate.swift in Sources */,
+				AEE7BA4F29C609D600CE1EC2 /* KampkitCombineBreedListScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

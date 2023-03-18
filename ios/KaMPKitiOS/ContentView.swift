@@ -18,12 +18,17 @@ struct ContentView: View {
 
     var body: some View {
         TabView(selection: $selection) {
-            BreedListScreen()
+            KampkitCombineBreedListScreen()
+                .tabItem {
+                    Label("Kampkit", systemImage: "list.dash")
+                }
+                .tag(Tab.combine)
+            KampkitCombineBreedListScreen()
                 .tabItem {
                     Label("Combine", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
-            BreedListScreen()
+            KampkitCombineBreedListScreen()
                 .tabItem {
                     Label("Async", systemImage: "stopwatch")
                 }
