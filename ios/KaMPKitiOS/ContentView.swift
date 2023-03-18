@@ -28,7 +28,7 @@ struct ContentView: View {
                     Label("Kampkit", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
-            AdapterBreedListScreen()
+            NativeCombineBreedListScreen()
                 .tabItem {
                     Label("Combine", systemImage: "list.dash")
                 }
