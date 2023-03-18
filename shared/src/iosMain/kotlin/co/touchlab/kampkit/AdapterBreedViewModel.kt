@@ -7,7 +7,7 @@ import co.touchlab.kampkit.models.BreedViewState
 import co.touchlab.kermit.Logger
 
 @Suppress("Unused") // Members are called from Swift
-class BreedKampkitCallbackViewModel(
+class AdapterBreedViewModel(
     breedRepository: BreedRepository,
     log: Logger
 ) {

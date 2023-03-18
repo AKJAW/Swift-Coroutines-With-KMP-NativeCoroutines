@@ -5,8 +5,8 @@ import shared
 
 private let log = koin.loggerWithTag(tag: "KampkitBreedModel")
 
-private class KampkitBreedModel: ObservableObject {
-    private var viewModel: BreedKampkitCallbackViewModel?
+private class AdapterBreedModel: ObservableObject {
+    private var viewModel: AdapterBreedViewModel?
 
     @Published
     var loading = false
@@ -20,7 +20,7 @@ private class KampkitBreedModel: ObservableObject {
     private var cancellables = [AnyCancellable]()
 
     func activate() {
-        let viewModel = KotlinDependencies.shared.getBreedKampkitCallbackViewModel()
+        let viewModel = KotlinDependencies.shared.getAdapterBreedViewModel()
 
         doPublish(viewModel.breeds) { [weak self] dogsState in
             self?.loading = dogsState.isLoading
@@ -63,9 +63,9 @@ private class KampkitBreedModel: ObservableObject {
     }
 }
 
-struct KampkitCombineBreedListScreen: View {
+struct AdapterBreedListScreen: View {
     @StateObject
-    private var observableModel = KampkitBreedModel()
+    private var observableModel = AdapterBreedModel()
 
     var body: some View {
         BreedListContent(

@@ -23,17 +23,17 @@ struct ContentView: View {
                     Label("Coroutines", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
-            KampkitCombineBreedListScreen()
+            AdapterBreedListScreen()
                 .tabItem {
                     Label("Kampkit", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
-            KampkitCombineBreedListScreen()
+            AdapterBreedListScreen()
                 .tabItem {
                     Label("Combine", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
-            KampkitCombineBreedListScreen()
+            AdapterBreedListScreen()
                 .tabItem {
                     Label("Async", systemImage: "stopwatch")
                 }
