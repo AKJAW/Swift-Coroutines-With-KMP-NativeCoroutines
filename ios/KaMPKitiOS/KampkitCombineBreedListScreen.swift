@@ -3,9 +3,9 @@ import SwiftUI
 import Foundation
 import shared
 
-private let log = koin.loggerWithTag(tag: "ViewController")
+private let log = koin.loggerWithTag(tag: "KampkitBreedModel")
 
-private class ObservableBreedModel: ObservableObject {
+private class KampkitBreedModel: ObservableObject {
     private var viewModel: BreedKampkitCallbackViewModel?
 
     @Published
@@ -20,7 +20,7 @@ private class ObservableBreedModel: ObservableObject {
     private var cancellables = [AnyCancellable]()
 
     func activate() {
-        let viewModel = KotlinDependencies.shared.getBreedViewModel()
+        let viewModel = KotlinDependencies.shared.getBreedKampkitCallbackViewModel()
 
         doPublish(viewModel.breeds) { [weak self] dogsState in
             self?.loading = dogsState.isLoading
@@ -51,13 +51,17 @@ private class ObservableBreedModel: ObservableObject {
     }
 
     func refresh() {
-        viewModel?.refreshBreeds()
+        // TODO add wrapper for suspend fun?
+        // TODO something about error handling? - Probably the wrapper will have a try catch?
+        viewModel?.refreshBreeds { wasRefreshed, error in
+            log.i(message: {"refreshBreeds completed, wasRefreshed: \(wasRefreshed?.boolValue), error: \(error)"})
+        }
     }
 }
 
 struct KampkitCombineBreedListScreen: View {
     @StateObject
-    private var observableModel = ObservableBreedModel()
+    private var observableModel = KampkitBreedModel()
 
     var body: some View {
         BreedListContent(

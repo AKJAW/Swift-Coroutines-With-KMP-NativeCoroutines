@@ -16,9 +16,8 @@ class BreedKampkitCallbackViewModel(
 
     val breeds = viewModel.breedState.asCallbacks()
 
-    fun refreshBreeds() {
+    suspend fun refreshBreeds(): Boolean =
         viewModel.refreshBreeds()
-    }
 
     fun updateBreedFavorite(breed: Breed) {
         viewModel.updateBreedFavorite(breed)

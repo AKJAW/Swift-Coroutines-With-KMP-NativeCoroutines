@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -39,6 +40,7 @@ import co.touchlab.kampkit.models.BreedViewState
 import co.touchlab.kermit.Logger
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
@@ -49,13 +51,14 @@ fun MainScreen(
     val lifecycleAwareDogsFlow = remember(viewModel.breedState, lifecycleOwner) {
         viewModel.breedState.flowWithLifecycle(lifecycleOwner.lifecycle)
     }
+    val scope = rememberCoroutineScope()
 
     @SuppressLint("StateFlowValueCalledInComposition") // False positive lint check when used inside collectAsState()
     val dogsState by lifecycleAwareDogsFlow.collectAsState(viewModel.breedState.value)
 
     MainScreenContent(
         dogsState = dogsState,
-        onRefresh = { viewModel.refreshBreeds() },
+        onRefresh = { scope.launch { viewModel.refreshBreeds() } },
         onSuccess = { data -> log.v { "View updating with ${data.size} breeds" } },
         onError = { exception -> log.e { "Displaying error: $exception" } },
         onFavorite = { viewModel.updateBreedFavorite(it) }

@@ -60,16 +60,16 @@ class BreedViewModel(
         }
     }
 
-    fun refreshBreeds(): Job {
+    suspend fun refreshBreeds(): Boolean {
         // Set loading state, which will be cleared when the repository re-emits
         mutableBreedState.update { it.copy(isLoading = true) }
-        return viewModelScope.launch {
-            log.v { "refreshBreeds" }
-            try {
-                breedRepository.refreshBreeds()
-            } catch (exception: Exception) {
-                handleBreedError(exception)
-            }
+        log.v { "refreshBreeds" }
+        return try {
+            breedRepository.refreshBreeds()
+            true
+        } catch (exception: Exception) {
+            handleBreedError(exception)
+            false
         }
     }
 

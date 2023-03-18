@@ -1,6 +1,7 @@
 package co.touchlab.kampkit
 
 import co.touchlab.kampkit.db.KaMPKitDb
+import co.touchlab.kampkit.models.BreedViewModel
 import co.touchlab.kermit.Logger
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings
@@ -31,6 +32,7 @@ actual val platformModule = module {
 
     single { Darwin.create() }
 
+    single { BreedViewModel(get(), getWith("BreedViewModel")) }
     single { BreedKampkitCallbackViewModel(get(), getWith("BreedCallbackViewModel")) }
 }
 
@@ -41,5 +43,7 @@ fun Koin.loggerWithTag(tag: String) =
 
 @Suppress("unused") // Called from Swift
 object KotlinDependencies : KoinComponent {
-    fun getBreedViewModel() = getKoin().get<BreedKampkitCallbackViewModel>()
+    fun getBreedKampkitCallbackViewModel() = getKoin().get<BreedKampkitCallbackViewModel>()
+
+    fun getBreedViewModel() = getKoin().get<BreedViewModel>()
 }
