@@ -5,6 +5,7 @@ import shared
 
 private let log = koin.loggerWithTag(tag: "ViewController")
 
+// https://www.slideshare.net/ChristianMelchior/coroutines-for-kotlin-multiplatform-in-practise
 class Collector<T>: Kotlinx_coroutines_coreFlowCollector {
     private let callback: (T) -> Void
 

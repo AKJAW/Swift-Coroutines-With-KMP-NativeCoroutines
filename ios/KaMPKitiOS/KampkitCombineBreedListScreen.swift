@@ -51,11 +51,15 @@ private class KampkitBreedModel: ObservableObject {
     }
 
     func refresh() {
-        // TODO add wrapper for suspend fun?
-        // TODO something about error handling? - Probably the wrapper will have a try catch?
-        viewModel?.refreshBreeds { wasRefreshed, error in
-            log.i(message: {"refreshBreeds completed, wasRefreshed: \(wasRefreshed?.boolValue), error: \(error)"})
+        guard let viewModel = self.viewModel else {
+            return
         }
+        createFuture(suspendAdapter: viewModel.refreshBreeds()).sink { completion in
+            print(log.i(message: { "refreshBreeds completion \(completion)" }))
+        } receiveValue: { value in
+            print(log.i(message: { "refreshBreeds recieveValue \(value.boolValue)" }))
+        }.store(in: &cancellables)
+
     }
 }
 

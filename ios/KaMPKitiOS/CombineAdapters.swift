@@ -38,3 +38,21 @@ class KotlinError: LocalizedError {
         throwable.message
     }
 }
+
+// https://dev.to/touchlab/kotlin-coroutines-and-swift-revisited-j5h
+func createFuture<T>(
+    suspendAdapter: SuspendAdapter<T>
+) -> AnyPublisher<T, KotlinError> {
+    return Deferred<Publishers.HandleEvents<Future<T, KotlinError>>> {
+        var job: Kotlinx_coroutines_coreJob? = nil
+        return Future { promise in
+            job = suspendAdapter.subscribe(
+                onSuccess: { item in promise(.success(item)) },
+                onThrow: { error in promise(.failure(KotlinError(error))) }
+            )
+        }.handleEvents(receiveCancel: {
+            job?.cancel(cause: nil)
+        })
+    }
+    .eraseToAnyPublisher()
+}
