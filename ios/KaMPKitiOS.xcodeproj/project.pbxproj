@@ -745,7 +745,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rickclephas/KMP-NativeCoroutines.git";
 			requirement = {
-				branch = master;
+				branch = "v1.0.0-ALPHA-4";
 				kind = branch;
 			};
 		};

@@ -111,3 +111,7 @@ sqldelight {
         packageName = "co.touchlab.kampkit.db"
     }
 }
+
+kotlin.sourceSets.all {
+    languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
+}

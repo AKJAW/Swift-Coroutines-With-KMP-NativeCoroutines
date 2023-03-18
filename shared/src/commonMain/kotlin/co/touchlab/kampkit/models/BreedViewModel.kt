@@ -2,6 +2,8 @@ package co.touchlab.kampkit.models
 
 import co.touchlab.kampkit.db.Breed
 import co.touchlab.kermit.Logger
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +22,9 @@ class BreedViewModel(
         MutableStateFlow(BreedViewState(isLoading = true))
 
     val breedState: StateFlow<BreedViewState> = mutableBreedState
+
+    @NativeCoroutines
+    val nativeBreedState: StateFlow<BreedViewState> = breedState
 
     init {
         observeBreeds()
@@ -59,6 +64,9 @@ class BreedViewModel(
                 }
         }
     }
+
+    @NativeCoroutines
+    suspend fun nativeRefreshBreeds(): Boolean = refreshBreeds()
 
     suspend fun refreshBreeds(): Boolean {
         // Set loading state, which will be cleared when the repository re-emits

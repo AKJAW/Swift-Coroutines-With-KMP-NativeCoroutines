@@ -23,7 +23,7 @@ private class NativeCombineBreedModel: ObservableObject {
     func activate() {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
-        createPublisher(for: viewModel.breedStateNative)
+        createPublisher(for: viewModel.nativeBreedState)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("Breeds completion: \(completion)")
@@ -62,12 +62,13 @@ private class NativeCombineBreedModel: ObservableObject {
         guard let viewModel = self.viewModel else {
             return
         }
-        createFuture(for: viewModel.refreshBreedsNative())
+        createFuture(for: viewModel.nativeRefreshBreeds())
         .sink { completion in
             print(log.i(message: { "refreshBreeds completion \(completion)" }))
         } receiveValue: { value in
             print(log.i(message: { "refreshBreeds recieveValue \(value.boolValue)" }))
-        }.store(in: &cancellables)
+        }
+        .store(in: &cancellables)
     }
 }
 
