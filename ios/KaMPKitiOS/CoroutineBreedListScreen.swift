@@ -3,7 +3,7 @@ import SwiftUI
 import Foundation
 import shared
 
-private let log = koin.loggerWithTag(tag: "ViewController")
+private let log = koin.loggerWithTag(tag: "CoroutineBreedModel")
 
 // https://www.slideshare.net/ChristianMelchior/coroutines-for-kotlin-multiplatform-in-practise
 class Collector<T>: Kotlinx_coroutines_coreFlowCollector {

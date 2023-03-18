@@ -3,7 +3,7 @@ import SwiftUI
 import Foundation
 import shared
 
-private let log = koin.loggerWithTag(tag: "KampkitBreedModel")
+private let log = koin.loggerWithTag(tag: "AdapterBreedModel")
 
 private class AdapterBreedModel: ObservableObject {
     private var viewModel: AdapterBreedViewModel?
