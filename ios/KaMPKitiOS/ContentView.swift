@@ -25,12 +25,12 @@ struct ContentView: View {
                 .tag(Tab.combine)
             AdapterBreedListScreen()
                 .tabItem {
-                    Label("Kampkit", systemImage: "list.dash")
+                    Label("Adapter", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
             NativeCombineBreedListScreen()
                 .tabItem {
-                    Label("Combine", systemImage: "list.dash")
+                    Label("Native", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
         }

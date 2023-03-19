@@ -4,8 +4,6 @@ import Foundation
 import shared
 import KMPNativeCoroutinesCombine
 
-private let log = koin.loggerWithTag(tag: "NativeCombineBreedModel")
-
 private class NativeCombineBreedModel: ObservableObject {
     private var viewModel: BreedViewModel?
 
@@ -23,25 +21,26 @@ private class NativeCombineBreedModel: ObservableObject {
     func activate() {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
-        createPublisher(for: viewModel.nativeBreedState)
-//            .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
+        let nativeFlow = viewModel.nativeBreedStateFlow
+        createPublisher(for: nativeFlow)
+            .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
             .sink { completion in
-                log.d(message: { "Breeds completion: \(completion)" })
+                print("Breeds completion: \(completion)")
             } receiveValue: { [weak self] dogsState in
-                    self?.loading = dogsState.isLoading
-                    self?.breeds = dogsState.breeds
-                    self?.error = dogsState.error
+                self?.loading = dogsState.isLoading
+                self?.breeds = dogsState.breeds
+                self?.error = dogsState.error
 
-                    if let breeds = dogsState.breeds {
-                        log.d(message: {"View updating with \(breeds.count) breeds"})
-                    }
-                    if let errorMessage = dogsState.error {
-                        log.e(message: {"Displaying error: \(errorMessage)"})
-                    }
+                if let breeds = dogsState.breeds {
+                    print("View updating with \(breeds.count) breeds")
+                }
+                if let errorMessage = dogsState.error {
+                    print("Displaying error: \(errorMessage)")
+                }
             }
             .store(in: &cancellables)
 
-        log.d(message: { "cancellables count: \(self.cancellables.count)" })
+        print("cancellables count: \(self.cancellables.count)")
         self.viewModel = viewModel
     }
 
@@ -62,13 +61,13 @@ private class NativeCombineBreedModel: ObservableObject {
         guard let viewModel = self.viewModel else {
             return
         }
-        createFuture(for: viewModel.nativeRefreshBreeds())
-        .sink { completion in
-            log.d(message: { "refreshBreeds completion \(completion)" })
-        } receiveValue: { value in
-            log.d(message: { "refreshBreeds recieveValue \(value.boolValue)" })
-        }
-        .store(in: &cancellables)
+        let suspend = viewModel.nativeRefreshBreeds()
+        createFuture(for: suspend)
+            .sink { completion in
+                print("completion \(completion)")
+            } receiveValue: { value in
+                print("recieveValue \(value)")
+            }.store(in: &cancellables)
     }
 }
 
@@ -85,11 +84,11 @@ struct NativeCombineBreedListScreen: View {
             refresh: { observableModel.refresh() }
         )
         .onAppear(perform: {
-            log.d(message: {"onAppear"})
+            print("onAppear")
             observableModel.activate()
         })
         .onDisappear(perform: {
-            log.d(message: {"onDisappear"})
+            print("onDisappear")
             observableModel.deactivate()
         })
     }

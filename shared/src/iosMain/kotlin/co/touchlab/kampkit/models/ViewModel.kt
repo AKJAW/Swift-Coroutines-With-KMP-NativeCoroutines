@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.Flow
 actual abstract class ViewModel {
 
     @NativeCoroutineScope
-    actual val viewModelScope = MainScope()
+    actual val viewModelScope =
+        MainScope()
 
     /**
      * Override this to do any cleanup immediately before the internal [CoroutineScope][kotlinx.coroutines.CoroutineScope]

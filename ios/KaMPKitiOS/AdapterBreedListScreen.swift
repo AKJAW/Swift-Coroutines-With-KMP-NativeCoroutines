@@ -3,8 +3,6 @@ import SwiftUI
 import Foundation
 import shared
 
-private let log = koin.loggerWithTag(tag: "AdapterBreedModel")
-
 private class AdapterBreedModel: ObservableObject {
     private var viewModel: AdapterBreedViewModel?
 
@@ -22,18 +20,35 @@ private class AdapterBreedModel: ObservableObject {
     func activate() {
         let viewModel = KotlinDependencies.shared.getAdapterBreedViewModel()
 
-        doPublish(viewModel.breeds) { [weak self] dogsState in
-            self?.loading = dogsState.isLoading
-            self?.breeds = dogsState.breeds
-            self?.error = dogsState.error
+//        doPublish(viewModel.breeds) { [weak self] dogsState in
+//            self?.loading = dogsState.isLoading
+//            self?.breeds = dogsState.breeds
+//            self?.error = dogsState.error
+//
+//            if let breeds = dogsState.breeds {
+//                log.d(message: {"View updating with \(breeds.count) breeds"})
+//            }
+//            if let errorMessage = dogsState.error {
+//                log.e(message: {"Displaying error: \(errorMessage)"})
+//            }
+//        }.store(in: &cancellables)
 
-            if let breeds = dogsState.breeds {
-                log.d(message: {"View updating with \(breeds.count) breeds"})
-            }
-            if let errorMessage = dogsState.error {
-                log.e(message: {"Displaying error: \(errorMessage)"})
-            }
-        }.store(in: &cancellables)
+        viewModel.breeds.subscribe(
+            onEach: { [weak self] dogsState in
+                self?.loading = dogsState.isLoading
+                self?.breeds = dogsState.breeds
+                self?.error = dogsState.error
+
+                if let breeds = dogsState.breeds {
+                    print("View updating with \(breeds.count) breeds")
+                }
+                if let errorMessage = dogsState.error {
+                    print("Displaying error: \(errorMessage)")
+                }
+            },
+            onComplete: { print("Subscription end") },
+            onThrow: { error in  print("Subscription error: \(error)") }
+        )
 
         self.viewModel = viewModel
     }
@@ -54,12 +69,22 @@ private class AdapterBreedModel: ObservableObject {
         guard let viewModel = self.viewModel else {
             return
         }
-        createFuture(suspendAdapter: viewModel.refreshBreeds()).sink { completion in
-            log.d(message: { "refreshBreeds completion \(completion)" })
-        } receiveValue: { value in
-            log.d(message: { "refreshBreeds recieveValue \(value.boolValue)" })
-        }.store(in: &cancellables)
+//        let adapter = viewModel.refreshBreeds()
+//        createFuture(suspendAdapter: adapter)
+//            .sink { completion in
+//                print("completion \(completion)")
+//            } receiveValue: { value in
+//                print("recieveValue \(value)")
+//            }.store(in: &cancellables)
 
+        viewModel.refreshBreeds().subscribe(
+            onSuccess: { value in
+                print("completion \(value)")
+            },
+            onThrow: { error in
+                print("error \(error)")
+            }
+        )
     }
 }
 

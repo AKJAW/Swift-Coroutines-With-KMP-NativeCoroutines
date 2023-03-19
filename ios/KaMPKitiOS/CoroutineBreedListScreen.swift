@@ -3,8 +3,6 @@ import SwiftUI
 import Foundation
 import shared
 
-private let log = koin.loggerWithTag(tag: "CoroutineBreedModel")
-
 // https://www.slideshare.net/ChristianMelchior/coroutines-for-kotlin-multiplatform-in-practise
 class Collector<T>: Kotlinx_coroutines_coreFlowCollector {
     private let callback: (T) -> Void
@@ -37,23 +35,23 @@ private class CoroutineBreedModel: ObservableObject {
     func activate() {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
-        let job = viewModel.breedState.collect(
-            collector: Collector<BreedViewState> { [weak self] dogsState in
-                self?.loading = dogsState.isLoading
-                self?.breeds = dogsState.breeds
-                self?.error = dogsState.error
+viewModel.breedState.collect(
+    collector: Collector<BreedViewState> { [weak self] dogsState in
+        self?.loading = dogsState.isLoading
+        self?.breeds = dogsState.breeds
+        self?.error = dogsState.error
 
-                if let breeds = dogsState.breeds {
-                    log.d(message: {"View updating with \(breeds.count) breeds"})
-                }
-                if let errorMessage = dogsState.error {
-                    log.e(message: {"Displaying error: \(errorMessage)"})
-                }
-            },
-            completionHandler: { error in
-                log.e(message: {"breed collection completion error: \(error)"})
-            }
-        )
+        if let breeds = dogsState.breeds {
+            print("View updating with \(breeds.count) breeds")
+        }
+        if let errorMessage = dogsState.error {
+            print("Displaying error: \(errorMessage)")
+        }
+    },
+    completionHandler: { error in
+        print("breed collection completion error: \(error)")
+    }
+)
 
         self.viewModel = viewModel
     }
@@ -68,7 +66,7 @@ private class CoroutineBreedModel: ObservableObject {
 
     func refresh() {
         viewModel?.refreshBreeds { wasRefreshed, error in
-            log.d(message: {"refreshBreeds completed, wasRefreshed: \(wasRefreshed?.boolValue), error: \(error)"})
+            print("refreshed: \(wasRefreshed), error: \(error)")
         }
     }
 }

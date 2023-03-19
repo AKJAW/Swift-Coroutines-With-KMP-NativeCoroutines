@@ -18,13 +18,17 @@ class BreedViewModel(
 ) : ViewModel() {
     private val log = log.withTag("BreedCommonViewModel")
 
-    private val mutableBreedState: MutableStateFlow<BreedViewState> =
-        MutableStateFlow(BreedViewState(isLoading = true))
+    private val mutableBreedState =
+        MutableStateFlow(
+            BreedViewState(isLoading = true)
+        )
 
-    val breedState: StateFlow<BreedViewState> = mutableBreedState
+    val breedState: StateFlow<BreedViewState> =
+        mutableBreedState
 
-    @NativeCoroutines
-    val nativeBreedState: StateFlow<BreedViewState> = breedState
+    @NativeCoroutinesState
+    val nativeBreedState: StateFlow<BreedViewState> =
+        breedState
 
     init {
         observeBreeds()
@@ -66,12 +70,10 @@ class BreedViewModel(
     }
 
     @NativeCoroutines
-    suspend fun nativeRefreshBreeds(): Boolean = refreshBreeds()
+    suspend fun nativeRefreshBreeds(): Boolean =
+        refreshBreeds()
 
     suspend fun refreshBreeds(): Boolean {
-        // Set loading state, which will be cleared when the repository re-emits
-        mutableBreedState.update { it.copy(isLoading = true) }
-        log.v { "refreshBreeds" }
         return try {
             breedRepository.refreshBreeds()
             true
