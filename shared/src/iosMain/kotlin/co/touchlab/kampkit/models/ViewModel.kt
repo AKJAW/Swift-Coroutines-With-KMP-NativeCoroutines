@@ -1,6 +1,7 @@
 package co.touchlab.kampkit.models
 
 import co.touchlab.kampkit.FlowAdapter
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
  */
 actual abstract class ViewModel {
 
+    @NativeCoroutineScope
     actual val viewModelScope = MainScope()
 
     /**

@@ -24,7 +24,7 @@ private class NativeCombineBreedModel: ObservableObject {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
         createPublisher(for: viewModel.nativeBreedState)
-            .receive(on: DispatchQueue.main)
+//            .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
             .sink { completion in
                 print("Breeds completion: \(completion)")
             } receiveValue: { [weak self] dogsState in
@@ -41,11 +41,10 @@ private class NativeCombineBreedModel: ObservableObject {
             }
             .store(in: &cancellables)
 
-
-
         self.viewModel = viewModel
     }
 
+    // TODO is this needed?
     func deactivate() {
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
