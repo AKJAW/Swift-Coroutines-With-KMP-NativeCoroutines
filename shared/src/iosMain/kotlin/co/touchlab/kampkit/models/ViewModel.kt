@@ -4,6 +4,7 @@ import co.touchlab.kampkit.FlowAdapter
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -23,12 +24,8 @@ actual abstract class ViewModel {
     protected actual open fun onCleared() {
     }
 
-    /**
-     * Cancels the internal [CoroutineScope][kotlinx.coroutines.CoroutineScope]. After this is called, the ViewModel should
-     * no longer be used.
-     */
     fun clear() {
         onCleared()
-        viewModelScope.cancel()
+        viewModelScope.coroutineContext.cancelChildren()
     }
 }

@@ -32,8 +32,8 @@ actual val platformModule = module {
 
     single { Darwin.create() }
 
-    single { BreedViewModel(get(), getWith("BreedViewModel")) }
-    single { AdapterBreedViewModel(get(), getWith("BreedCallbackViewModel")) }
+    factory { BreedViewModel(get(), getWith("BreedViewModel")) }
+    factory { AdapterBreedViewModel(get(), getWith("BreedCallbackViewModel")) }
 }
 
 // Access from Swift to create a logger

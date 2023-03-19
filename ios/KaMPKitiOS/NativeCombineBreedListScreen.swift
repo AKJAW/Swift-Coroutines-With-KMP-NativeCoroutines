@@ -41,14 +41,15 @@ private class NativeCombineBreedModel: ObservableObject {
             }
             .store(in: &cancellables)
 
+        log.d(message: { "cancellables count: \(self.cancellables.count)" })
         self.viewModel = viewModel
     }
 
-    // TODO is this needed?
     func deactivate() {
+        // Needed if activate is called in onAppear.
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
-
+        // Needed for init and favorite update
         viewModel?.clear()
         viewModel = nil
     }
@@ -84,9 +85,11 @@ struct NativeCombineBreedListScreen: View {
             refresh: { observableModel.refresh() }
         )
         .onAppear(perform: {
+            log.d(message: {"onAppear"})
             observableModel.activate()
         })
         .onDisappear(perform: {
+            log.d(message: {"onDisappear"})
             observableModel.deactivate()
         })
     }
