@@ -55,9 +55,9 @@ private class AdapterBreedModel: ObservableObject {
             return
         }
         createFuture(suspendAdapter: viewModel.refreshBreeds()).sink { completion in
-            print(log.i(message: { "refreshBreeds completion \(completion)" }))
+            log.d(message: { "refreshBreeds completion \(completion)" })
         } receiveValue: { value in
-            print(log.i(message: { "refreshBreeds recieveValue \(value.boolValue)" }))
+            log.d(message: { "refreshBreeds recieveValue \(value.boolValue)" })
         }.store(in: &cancellables)
 
     }

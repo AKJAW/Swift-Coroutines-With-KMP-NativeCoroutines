@@ -26,7 +26,7 @@ private class NativeCombineBreedModel: ObservableObject {
         createPublisher(for: viewModel.nativeBreedState)
 //            .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
             .sink { completion in
-                print("Breeds completion: \(completion)")
+                log.d(message: { "Breeds completion: \(completion)" })
             } receiveValue: { [weak self] dogsState in
                     self?.loading = dogsState.isLoading
                     self?.breeds = dogsState.breeds
@@ -63,9 +63,9 @@ private class NativeCombineBreedModel: ObservableObject {
         }
         createFuture(for: viewModel.nativeRefreshBreeds())
         .sink { completion in
-            print(log.i(message: { "refreshBreeds completion \(completion)" }))
+            log.d(message: { "refreshBreeds completion \(completion)" })
         } receiveValue: { value in
-            print(log.i(message: { "refreshBreeds recieveValue \(value.boolValue)" }))
+            log.d(message: { "refreshBreeds recieveValue \(value.boolValue)" })
         }
         .store(in: &cancellables)
     }

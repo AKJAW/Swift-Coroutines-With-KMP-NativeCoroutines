@@ -37,9 +37,6 @@ private class CoroutineBreedModel: ObservableObject {
     func activate() {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
-        // TODO something about changing dispatchers???
-        // TODO how to cancel?
-        // TODO Other uncaught Kotlin exceptions are fatal.
         let job = viewModel.breedState.collect(
             collector: Collector<BreedViewState> { [weak self] dogsState in
                 self?.loading = dogsState.isLoading
@@ -62,7 +59,6 @@ private class CoroutineBreedModel: ObservableObject {
     }
 
     func deactivate() {
-        // TODO both cannot be cancelled, right?
         refreshJob?.cancel(cause: nil)
     }
 
@@ -71,8 +67,8 @@ private class CoroutineBreedModel: ObservableObject {
     }
 
     func refresh() {
-        let job = viewModel?.refreshBreeds { wasRefreshed, error in
-            log.i(message: {"refreshBreeds completed, wasRefreshed: \(wasRefreshed?.boolValue), error: \(error)"})
+        viewModel?.refreshBreeds { wasRefreshed, error in
+            log.d(message: {"refreshBreeds completed, wasRefreshed: \(wasRefreshed?.boolValue), error: \(error)"})
         }
     }
 }

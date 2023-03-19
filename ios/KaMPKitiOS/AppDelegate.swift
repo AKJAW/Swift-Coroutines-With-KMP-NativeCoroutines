@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = viewController
         self.window?.makeKeyAndVisible()
 
-        log.v(message: {"App Started"})
+        log.d(message: {"App Started"})
         return true
     }
 }

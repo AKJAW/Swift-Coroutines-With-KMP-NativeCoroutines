@@ -33,11 +33,6 @@ struct ContentView: View {
                     Label("Combine", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
-            AdapterBreedListScreen()
-                .tabItem {
-                    Label("Async", systemImage: "stopwatch")
-                }
-                .tag(Tab.async)
         }
     }
 }
