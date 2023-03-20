@@ -15,6 +15,7 @@ struct BreedListContent: View {
     var breeds: [Breed]?
     var error: String?
     var onBreedFavorite: (Breed) -> Void
+    var onCancel: (() -> Void)?
     var refresh: () -> Void
 
     var body: some View {
@@ -33,6 +34,13 @@ struct BreedListContent: View {
                 }
                 Button("Refresh") {
                     refresh()
+                }
+                Spacer()
+                if onCancel != nil {
+                    Button("Cancel") {
+                        onCancel?()
+                    }
+                    Spacer()
                 }
             }
             if loading { Text("Loading...") }

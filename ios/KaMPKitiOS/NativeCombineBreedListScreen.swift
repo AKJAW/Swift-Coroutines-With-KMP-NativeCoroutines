@@ -21,7 +21,7 @@ private class NativeCombineBreedModel: ObservableObject {
     func activate() {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
-        let nativeFlow = viewModel.nativeBreedStateFlow
+        let nativeFlow = viewModel.nativeBreedOnEachFlow
         createPublisher(for: nativeFlow)
             .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
             .sink { completion in
@@ -53,6 +53,11 @@ private class NativeCombineBreedModel: ObservableObject {
         viewModel = nil
     }
 
+    func cancel() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+    }
+
     func onBreedFavorite(_ breed: Breed) {
         viewModel?.updateBreedFavorite(breed: breed)
     }
@@ -81,6 +86,7 @@ struct NativeCombineBreedListScreen: View {
             breeds: observableModel.breeds,
             error: observableModel.error,
             onBreedFavorite: { observableModel.onBreedFavorite($0) },
+            onCancel: { observableModel.cancel() },
             refresh: { observableModel.refresh() }
         )
         .onAppear(perform: {
