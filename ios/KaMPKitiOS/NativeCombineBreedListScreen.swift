@@ -23,7 +23,7 @@ private class NativeCombineBreedModel: ObservableObject {
 
         let nativeFlow = viewModel.nativeBreedOnEachFlow
         createPublisher(for: nativeFlow)
-            .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
+            // .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
             .sink { completion in
                 print("Breeds completion: \(completion)")
             } receiveValue: { [weak self] dogsState in
@@ -74,6 +74,26 @@ private class NativeCombineBreedModel: ObservableObject {
                 print("recieveValue \(value)")
             }.store(in: &cancellables)
     }
+
+    func throwException() {
+        guard let viewModel = self.viewModel else {
+            return
+        }
+        createFuture(for: viewModel.throwException())
+            .sink { completion in
+                print("completion \(completion)")
+            } receiveValue: { value in
+                print("recieveValue \(value)")
+            }.store(in: &cancellables)
+
+        createPublisher(for: viewModel.errorFlow)
+            .sink { completion in
+                print("Error flow completion: \(completion)")
+            } receiveValue: { number in
+                print("Error flow value: \(number)")
+            }
+            .store(in: &cancellables)
+    }
 }
 
 struct NativeCombineBreedListScreen: View {
@@ -87,6 +107,7 @@ struct NativeCombineBreedListScreen: View {
             error: observableModel.error,
             onBreedFavorite: { observableModel.onBreedFavorite($0) },
             onCancel: { observableModel.cancel() },
+            onThrow: { observableModel.throwException() },
             refresh: { observableModel.refresh() }
         )
         .onAppear(perform: {

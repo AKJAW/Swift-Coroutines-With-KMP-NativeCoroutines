@@ -5,6 +5,7 @@ import co.touchlab.kermit.Logger
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,6 +39,15 @@ class BreedViewModel(
             .onEach {
                 log.i("breedState onEach")
             }
+
+    @NativeCoroutines
+    val errorFlow: Flow<Int> = flow {
+        repeat(3) { number ->
+            emit(number)
+            delay(100)
+        }
+        throw IllegalStateException()
+    }
 
     init {
         observeBreeds()
@@ -96,6 +106,11 @@ class BreedViewModel(
         return viewModelScope.launch {
             breedRepository.updateBreedFavorite(breed)
         }
+    }
+
+    @NativeCoroutines
+    suspend fun throwException() {
+        throw IllegalStateException()
     }
 
     private fun handleBreedError(throwable: Throwable) {

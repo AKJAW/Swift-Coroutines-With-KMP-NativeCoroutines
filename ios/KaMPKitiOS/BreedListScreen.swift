@@ -16,6 +16,7 @@ struct BreedListContent: View {
     var error: String?
     var onBreedFavorite: (Breed) -> Void
     var onCancel: (() -> Void)?
+    var onThrow: (() -> Void)?
     var refresh: () -> Void
 
     var body: some View {
@@ -39,6 +40,12 @@ struct BreedListContent: View {
                 if onCancel != nil {
                     Button("Cancel") {
                         onCancel?()
+                    }
+                    Spacer()
+                }
+                if onThrow != nil {
+                    Button("Throw Exception") {
+                        onThrow?()
                     }
                     Spacer()
                 }
