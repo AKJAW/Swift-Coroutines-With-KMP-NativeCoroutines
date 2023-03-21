@@ -24,7 +24,7 @@ class CoroutinesExampleViewModel(private val log: Logger) {
     val errorFlow: Flow<Int> = flow {
         repeat(3) { number ->
             emit(number)
-            delay(100)
+            delay(1000)
         }
         throw IllegalStateException()
     }
@@ -33,6 +33,7 @@ class CoroutinesExampleViewModel(private val log: Logger) {
 
     @NativeCoroutines
     suspend fun throwException() {
+        delay(1000)
         throw IllegalStateException()
     }
 }

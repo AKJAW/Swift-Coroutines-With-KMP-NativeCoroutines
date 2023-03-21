@@ -7,13 +7,20 @@ import KMPNativeCoroutinesCombine
 private let log = koin.loggerWithTag(tag: "CoroutinesExampleViewModel")
 
 private class CoroutinesExampleModel: ObservableObject {
-    // TODO something with cancelling / nulling out? - This block de-init?
     private let viewModel: CoroutinesExampleViewModel = KotlinDependencies.shared.getCoroutinesExampleViewModel()
 
     @Published
     var number: Int = -1
 
-    private var cancellables = [AnyCancellable]()
+    var cancellables = [AnyCancellable]()
+
+    init() {
+        log.i(message_: "init \(Unmanaged.passUnretained(self).toOpaque())")
+    }
+
+    deinit {
+        log.i(message_: "deinit \(Unmanaged.passUnretained(self).toOpaque())")
+    }
 
     func activate() {
         createPublisher(for: viewModel.numberFlow)
@@ -24,23 +31,17 @@ private class CoroutinesExampleModel: ObservableObject {
                 self?.number = number.intValue
             }
             .store(in: &cancellables)
-
-        // TODO needeD?
-        log.i(message_: "cancellables count: \(self.cancellables.count)")
-    }
-
-    deinit {
-        log.i(message_: "deinit")
     }
 
     func cancel() {
-        log.i(message_: "cancelling")
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
     }
 
     func throwException() {
-        createFuture(for: viewModel.throwException())
+        let suspend = viewModel.throwException()
+        log.i(message_: "future exception start")
+        createFuture(for: suspend)
             .sink { completion in
                 log.i(message_: "future exception completion \(completion)")
             } receiveValue: { value in
@@ -78,15 +79,16 @@ struct CoroutinesExampleScreen: View {
                 NavigationLink("Open in a new screen", destination: { CoroutinesExampleScreen() })
                 Spacer()
             }
-        }
+        }.navigationViewStyle(StackNavigationViewStyle()) // Needed for deinit to work correclty...
         .onAppear(perform: {
             print("onAppear \(observableModel)")
             observableModel.activate()
         })
-        // Not cancelled on navigate back...
         .onDisappear(perform: {
             print("onDisappear")
-            observableModel.cancel()
+            log.i(message_: "cancellables count: \(observableModel.cancellables.count)")
+            // Not needed with StackNavigationViewStyle
+            // observableModel.cancel()
         })
     }
 }
