@@ -33,6 +33,11 @@ struct ContentView: View {
                     Label("Native", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
+            CoroutinesExampleScreen()
+                .tabItem {
+                    Label("Examples", systemImage: "list.dash")
+                }
+                .tag(Tab.combine)
         }
     }
 }

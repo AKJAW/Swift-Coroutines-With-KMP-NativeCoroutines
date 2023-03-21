@@ -17,9 +17,8 @@ import kotlinx.coroutines.launch
 
 class BreedViewModel(
     private val breedRepository: BreedRepository,
-    log: Logger
+    private val log: Logger
 ) : ViewModel() {
-    private val log = log.withTag("BreedCommonViewModel")
 
     private val mutableBreedState =
         MutableStateFlow(
@@ -32,22 +31,6 @@ class BreedViewModel(
     @NativeCoroutinesState
     val nativeBreedState: StateFlow<BreedViewState> =
         breedState
-
-    @NativeCoroutines
-    val nativeBreedOnEachFlow: Flow<BreedViewState> =
-        breedState
-            .onEach {
-                log.i("breedState onEach")
-            }
-
-    @NativeCoroutines
-    val errorFlow: Flow<Int> = flow {
-        repeat(3) { number ->
-            emit(number)
-            delay(100)
-        }
-        throw IllegalStateException()
-    }
 
     init {
         observeBreeds()
@@ -106,11 +89,6 @@ class BreedViewModel(
         return viewModelScope.launch {
             breedRepository.updateBreedFavorite(breed)
         }
-    }
-
-    @NativeCoroutines
-    suspend fun throwException() {
-        throw IllegalStateException()
     }
 
     private fun handleBreedError(throwable: Throwable) {

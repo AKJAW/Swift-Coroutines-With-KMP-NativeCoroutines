@@ -21,7 +21,7 @@ private class NativeCombineBreedModel: ObservableObject {
     func activate() {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
-        let nativeFlow = viewModel.nativeBreedOnEachFlow
+        let nativeFlow = viewModel.nativeBreedStateFlow
         createPublisher(for: nativeFlow)
             // .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
             .sink { completion in
@@ -53,11 +53,6 @@ private class NativeCombineBreedModel: ObservableObject {
         viewModel = nil
     }
 
-    func cancel() {
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
-    }
-
     func onBreedFavorite(_ breed: Breed) {
         viewModel?.updateBreedFavorite(breed: breed)
     }
@@ -74,26 +69,6 @@ private class NativeCombineBreedModel: ObservableObject {
                 print("recieveValue \(value)")
             }.store(in: &cancellables)
     }
-
-    func throwException() {
-        guard let viewModel = self.viewModel else {
-            return
-        }
-        createFuture(for: viewModel.throwException())
-            .sink { completion in
-                print("completion \(completion)")
-            } receiveValue: { value in
-                print("recieveValue \(value)")
-            }.store(in: &cancellables)
-
-        createPublisher(for: viewModel.errorFlow)
-            .sink { completion in
-                print("Error flow completion: \(completion)")
-            } receiveValue: { number in
-                print("Error flow value: \(number)")
-            }
-            .store(in: &cancellables)
-    }
 }
 
 struct NativeCombineBreedListScreen: View {
@@ -106,8 +81,6 @@ struct NativeCombineBreedListScreen: View {
             breeds: observableModel.breeds,
             error: observableModel.error,
             onBreedFavorite: { observableModel.onBreedFavorite($0) },
-            onCancel: { observableModel.cancel() },
-            onThrow: { observableModel.throwException() },
             refresh: { observableModel.refresh() }
         )
         .onAppear(perform: {

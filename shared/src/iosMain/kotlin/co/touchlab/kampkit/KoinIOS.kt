@@ -2,6 +2,7 @@ package co.touchlab.kampkit
 
 import co.touchlab.kampkit.db.KaMPKitDb
 import co.touchlab.kampkit.models.BreedViewModel
+import co.touchlab.kampkit.models.CoroutinesExampleViewModel
 import co.touchlab.kermit.Logger
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings
@@ -33,7 +34,8 @@ actual val platformModule = module {
     single { Darwin.create() }
 
     factory { BreedViewModel(get(), getWith("BreedViewModel")) }
-    factory { AdapterBreedViewModel(get(), getWith("BreedCallbackViewModel")) }
+    factory { AdapterBreedViewModel(get(), getWith("AdapterBreedViewModel")) }
+    factory { CoroutinesExampleViewModel(getWith("CoroutinesExampleViewModel")) }
 }
 
 // Access from Swift to create a logger
@@ -46,4 +48,6 @@ object KotlinDependencies : KoinComponent {
     fun getAdapterBreedViewModel() = getKoin().get<AdapterBreedViewModel>()
 
     fun getBreedViewModel() = getKoin().get<BreedViewModel>()
+
+    fun getCoroutinesExampleViewModel() = getKoin().get<CoroutinesExampleViewModel>()
 }
