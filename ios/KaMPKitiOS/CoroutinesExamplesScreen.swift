@@ -12,9 +12,13 @@ private class CoroutinesExampleModel: ObservableObject {
     @Published
     var number: Int = -1
 
+    @Published
+    var result: ExampleResult
+
     var cancellables = [AnyCancellable]()
 
     init() {
+        result = viewModel.exampleResult
         log.i(message_: "init \(Unmanaged.passUnretained(self).toOpaque())")
     }
 
@@ -24,7 +28,6 @@ private class CoroutinesExampleModel: ObservableObject {
 
     func activate() {
         createPublisher(for: viewModel.numberFlow)
-            .receive(on: DispatchQueue.main)
             .sink { completion in
                 log.i(message_: "Number flow completion: \(completion)")
             } receiveValue: { [weak self] number in
@@ -56,9 +59,19 @@ private class CoroutinesExampleModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+
+    func generateResult() {
+        createPublisher(for: viewModel.exampleResultFlow)
+            .sink { _ in
+            } receiveValue: { [weak self] result in
+                self?.result = result
+            }
+            .store(in: &cancellables)
+    }
 }
 
 struct CoroutinesExampleScreen: View {
+
     @StateObject
     private var observableModel = CoroutinesExampleModel()
 
@@ -67,10 +80,13 @@ struct CoroutinesExampleScreen: View {
             VStack {
                 Spacer()
                 Text("Number: \(observableModel.number)")
-                Spacer()
                 Button("Cancel") {
                     observableModel.cancel()
                 }
+                Spacer()
+
+                ResultView(result: observableModel.result, onClick: { observableModel.generateResult() })
+
                 Spacer()
                 Button("Throw Exception") {
                     observableModel.throwException()
@@ -80,15 +96,36 @@ struct CoroutinesExampleScreen: View {
                 Spacer()
             }
         }.navigationViewStyle(StackNavigationViewStyle()) // Needed for deinit to work correclty...
-        .onAppear(perform: {
-            print("onAppear \(observableModel)")
-            observableModel.activate()
-        })
-        .onDisappear(perform: {
-            print("onDisappear")
-            log.i(message_: "cancellables count: \(observableModel.cancellables.count)")
-            // Not needed with StackNavigationViewStyle
-            // observableModel.cancel()
-        })
+            .onAppear(perform: {
+                print("onAppear \(observableModel)")
+                observableModel.activate()
+            })
+            .onDisappear(perform: {
+                print("onDisappear")
+                log.i(message_: "cancellables count: \(observableModel.cancellables.count)")
+                // Not needed with StackNavigationViewStyle
+                // observableModel.cancel()
+            })
+    }
+}
+
+struct ResultView: View {
+
+    var result: ExampleResult
+    var onClick: () -> Void
+
+    var body: some View {
+        switch result {
+        case result as ExampleResult.Initial:
+            Button("Generate result") {
+                onClick()
+            }
+        case result as ExampleResult.Loading:
+            Text("Loading...")
+        case let success as ExampleResult.Success:
+            Text("Success: \(success.value)")
+        default:
+            Text("Error")
+        }
     }
 }
