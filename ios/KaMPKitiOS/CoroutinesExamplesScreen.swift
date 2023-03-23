@@ -34,6 +34,15 @@ private class CoroutinesExampleModel: ObservableObject {
                 self?.number = number.intValue
             }
             .store(in: &cancellables)
+
+        createPublisher(for: viewModel.exampleResultFlow)
+            .sink { completion in
+                log.i(message_: "result: \(completion)")
+            } receiveValue: { [weak self] result in
+                log.i(message_: "result: \(result)")
+                self?.result = result
+            }
+            .store(in: &cancellables)
     }
 
     func cancel() {
@@ -61,12 +70,7 @@ private class CoroutinesExampleModel: ObservableObject {
     }
 
     func generateResult() {
-        createPublisher(for: viewModel.exampleResultFlow)
-            .sink { _ in
-            } receiveValue: { [weak self] result in
-                self?.result = result
-            }
-            .store(in: &cancellables)
+        viewModel.generateResult()
     }
 }
 
@@ -125,7 +129,9 @@ struct ResultView: View {
         case let success as ExampleResult.Success:
             Text("Success: \(success.value)")
         default:
-            Text("Error")
+            Button("Error, try again") {
+                onClick()
+            }
         }
     }
 }

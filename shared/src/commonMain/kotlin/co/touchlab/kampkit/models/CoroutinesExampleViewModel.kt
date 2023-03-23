@@ -5,11 +5,14 @@ import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CoroutinesExampleViewModel(private val log: Logger) : ViewModel() {
 
@@ -34,18 +37,19 @@ class CoroutinesExampleViewModel(private val log: Logger) : ViewModel() {
     }
 
     @NativeCoroutinesState
-    val exampleResult: StateFlow<ExampleResult> =
-        flow {
-            emit(ExampleResult.Loading)
+    val exampleResult: MutableStateFlow<ExampleResult> = MutableStateFlow(ExampleResult.Initial)
+
+    fun generateResult() {
+        viewModelScope.launch {
+            exampleResult.update { ExampleResult.Loading }
             delay(1000)
             repeat(3) { number ->
-                emit(ExampleResult.Success(number))
+                exampleResult.update { ExampleResult.Success(number) }
                 delay(1000)
             }
-            emit(ExampleResult.Error)
-        }.stateIn(viewModelScope, SharingStarted.Lazily, ExampleResult.Initial)
-
-    // TODO something with a passed in scope?  : ViewModel()
+            exampleResult.update { ExampleResult.Error }
+        }
+    }
 
     @NativeCoroutines
     suspend fun throwException() {
@@ -60,7 +64,9 @@ sealed class ExampleResult {
 
     object Loading : ExampleResult()
 
-    data class Success(val value: Int) : ExampleResult()
+    data class Success(
+        val value: Int
+    ) : ExampleResult()
 
     object Error : ExampleResult()
 }
