@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -21,10 +22,12 @@ class CoroutinesExampleViewModel(private val log: Logger) : ViewModel() {
         var i = 0
         while (true) {
             emit(i++)
-            delay(100)
+            delay(1000)
         }
     }.onEach { number ->
         log.i("numberFlow onEach: $number")
+    }.onCompletion {throwable ->
+        log.i("numberFlow onCompletion: $throwable")
     }
 
     @NativeCoroutines
@@ -37,7 +40,8 @@ class CoroutinesExampleViewModel(private val log: Logger) : ViewModel() {
     }
 
     @NativeCoroutinesState
-    val exampleResult: MutableStateFlow<ExampleResult> = MutableStateFlow(ExampleResult.Initial)
+    val exampleResult: MutableStateFlow<ExampleResult> =
+        MutableStateFlow(ExampleResult.Initial)
 
     fun generateResult() {
         viewModelScope.launch {
