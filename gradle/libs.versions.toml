@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.8.0"
+kotlin = "1.8.21"
 
 ## SDK Versions
 minSdk = "21"
@@ -10,10 +10,10 @@ compileSdk = "33"
 android-gradle-plugin = "7.2.0"
 ktlint-gradle = "11.2.0"
 gradle-versions = "0.42.0"
-ksp = "1.8.0-1.0.9"
+ksp = "1.8.21-1.0.11"
 
-compose = "1.4.0-alpha03"
-composeCompiler = "1.4.0-dev-k1.8.0-33c0ad36f83"
+compose = "1.4.3"
+composeCompiler = "1.4.7"
 
 android-desugaring = "1.1.8" # Don't bump to 1.2.x until AGP is 7.3.x
 androidx-core = "1.9.0"
@@ -32,12 +32,12 @@ robolectric = "4.8.2"
 kermit = "1.2.2"
 stately = "1.2.3"
 
-accompanist-swiperefresh = "0.25.1"
+accompanist-swiperefresh = "0.30.1"
 koin = "3.2.0"
 multiplatformSettings = "1.0.0-alpha01"
 turbine = "0.12.1"
 sqlDelight = "1.5.5"
-kmpNativecoroutines = "1.0.0-ALPHA-4"
+kmpNativecoroutines = "1.0.0-ALPHA-10"
 
 [libraries]
 android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "android-desugaring" }
