@@ -16,7 +16,7 @@ actual abstract class ViewModel {
 
     @NativeCoroutineScope
     actual val viewModelScope =
-        MainScope()
+        MainScope() // TODO doesn't work with async?
 
     /**
      * Override this to do any cleanup immediately before the internal [CoroutineScope][kotlinx.coroutines.CoroutineScope]

@@ -9,11 +9,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selection: Tab = .combine
+    @State private var selection: Tab = .async
 
     enum Tab {
+        case coroutines
+        case adapter
         case combine
         case async
+        case example
     }
 
     var body: some View {
@@ -22,22 +25,27 @@ struct ContentView: View {
                 .tabItem {
                     Label("Coroutines", systemImage: "list.dash")
                 }
-                .tag(Tab.combine)
+                .tag(Tab.coroutines)
             AdapterBreedListScreen()
                 .tabItem {
                     Label("Adapter", systemImage: "list.dash")
                 }
-                .tag(Tab.combine)
+                .tag(Tab.adapter)
             NativeCombineBreedListScreen()
                 .tabItem {
-                    Label("Native", systemImage: "list.dash")
+                    Label("Combine", systemImage: "list.dash")
                 }
                 .tag(Tab.combine)
+            NativeAsyncBreedListScreen()
+                .tabItem {
+                    Label("Async", systemImage: "list.dash")
+                }
+                .tag(Tab.async)
             CoroutinesExampleScreen()
                 .tabItem {
                     Label("Examples", systemImage: "list.dash")
                 }
-                .tag(Tab.combine)
+                .tag(Tab.example)
         }
     }
 }

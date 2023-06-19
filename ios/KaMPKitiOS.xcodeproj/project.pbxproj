@@ -13,6 +13,7 @@
 		46A5B60826B04921002EFEAA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46A5B60626B04920002EFEAA /* Main.storyboard */; };
 		46B5284D249C5CF400A7725D /* Koin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B5284C249C5CF400A7725D /* Koin.swift */; };
 		AE3EFACA29C9E98F00AF1C20 /* CoroutinesExamplesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3EFAC929C9E98F00AF1C20 /* CoroutinesExamplesScreen.swift */; };
+		AE56FFC12A3F676800083E8E /* NativeAsyncBreedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56FFC02A3F676800083E8E /* NativeAsyncBreedModel.swift */; };
 		AEE7BA4D29C35A9600CE1EC2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE7BA4C29C35A9600CE1EC2 /* ContentView.swift */; };
 		AEE7BA4F29C609D600CE1EC2 /* AdapterBreedListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE7BA4E29C609D600CE1EC2 /* AdapterBreedListScreen.swift */; };
 		AEE7BA5129C60B3600CE1EC2 /* CoroutineBreedListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE7BA5029C60B3600CE1EC2 /* CoroutineBreedListScreen.swift */; };
@@ -52,6 +53,7 @@
 		46A5B60726B04920002EFEAA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		46B5284C249C5CF400A7725D /* Koin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Koin.swift; sourceTree = "<group>"; };
 		AE3EFAC929C9E98F00AF1C20 /* CoroutinesExamplesScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoroutinesExamplesScreen.swift; sourceTree = "<group>"; };
+		AE56FFC02A3F676800083E8E /* NativeAsyncBreedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeAsyncBreedModel.swift; sourceTree = "<group>"; };
 		AEE7BA4C29C35A9600CE1EC2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AEE7BA4E29C609D600CE1EC2 /* AdapterBreedListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdapterBreedListScreen.swift; sourceTree = "<group>"; };
 		AEE7BA5029C60B3600CE1EC2 /* CoroutineBreedListScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoroutineBreedListScreen.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				AEE7BA4C29C35A9600CE1EC2 /* ContentView.swift */,
 				AEE7BA4E29C609D600CE1EC2 /* AdapterBreedListScreen.swift */,
 				AEE7BA5929C6324800CE1EC2 /* NativeCombineBreedListScreen.swift */,
+				AE56FFC02A3F676800083E8E /* NativeAsyncBreedModel.swift */,
 				AE3EFAC929C9E98F00AF1C20 /* CoroutinesExamplesScreen.swift */,
 				AEE7BA5029C60B3600CE1EC2 /* CoroutineBreedListScreen.swift */,
 			);
@@ -389,6 +392,7 @@
 				AEE7BA5A29C6324800CE1EC2 /* NativeCombineBreedListScreen.swift in Sources */,
 				461C74AA2788F5F3004B1FFC /* CombineAdapters.swift in Sources */,
 				46A5B5EF26AF54F7002EFEAA /* BreedListScreen.swift in Sources */,
+				AE56FFC12A3F676800083E8E /* NativeAsyncBreedModel.swift in Sources */,
 				F1465F0123AA94BF0055F7C3 /* AppDelegate.swift in Sources */,
 				AEE7BA4F29C609D600CE1EC2 /* AdapterBreedListScreen.swift in Sources */,
 			);
@@ -749,7 +753,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rickclephas/KMP-NativeCoroutines.git";
 			requirement = {
-				branch = "v1.0.0-ALPHA-4";
+				branch = "v1.0.0-ALPHA-10";
 				kind = branch;
 			};
 		};
