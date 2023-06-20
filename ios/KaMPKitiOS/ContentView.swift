@@ -16,21 +16,22 @@ struct ContentView: View {
         case adapter
         case combine
         case async
-        case example
+        case combineExample
+        case asyncExample
     }
 
     var body: some View {
         TabView(selection: $selection) {
-            CoroutinesBreedListScreen()
-                .tabItem {
-                    Label("Coroutines", systemImage: "list.dash")
-                }
-                .tag(Tab.coroutines)
-            AdapterBreedListScreen()
-                .tabItem {
-                    Label("Adapter", systemImage: "list.dash")
-                }
-                .tag(Tab.adapter)
+//            CoroutinesBreedListScreen()
+//                .tabItem {
+//                    Label("Coroutines", systemImage: "list.dash")
+//                }
+//                .tag(Tab.coroutines)
+//            AdapterBreedListScreen()
+//                .tabItem {
+//                    Label("Adapter", systemImage: "list.dash")
+//                }
+//                .tag(Tab.adapter)
             NativeCombineBreedListScreen()
                 .tabItem {
                     Label("Combine", systemImage: "list.dash")
@@ -41,11 +42,16 @@ struct ContentView: View {
                     Label("Async", systemImage: "list.dash")
                 }
                 .tag(Tab.async)
-            CoroutinesExampleScreen()
+            CoroutinesCombineExampleScreen()
                 .tabItem {
-                    Label("Examples", systemImage: "list.dash")
+                    Label("Combine Examples", systemImage: "list.dash")
                 }
-                .tag(Tab.example)
+                .tag(Tab.combineExample)
+            CoroutinesAsyncExampleScreen()
+                .tabItem {
+                    Label("Async Examples", systemImage: "list.dash")
+                }
+                .tag(Tab.asyncExample)
         }
     }
 }

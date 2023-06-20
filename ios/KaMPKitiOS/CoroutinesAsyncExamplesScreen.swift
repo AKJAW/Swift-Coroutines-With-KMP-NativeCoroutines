@@ -2,11 +2,11 @@ import Combine
 import SwiftUI
 import Foundation
 import shared
-import KMPNativeCoroutinesCombine
+import KMPNativeCoroutinesAsync
 
 private let log = koin.loggerWithTag(tag: "CoroutinesExampleViewModel")
 
-private class CoroutinesExampleModel: ObservableObject {
+private class CoroutinesAsyncExampleModel: ObservableObject {
     private let viewModel: CoroutinesExampleViewModel = KotlinDependencies.shared.getCoroutinesExampleViewModel()
 
     @Published
@@ -26,47 +26,62 @@ private class CoroutinesExampleModel: ObservableObject {
         log.i(message_: "deinit \(Unmanaged.passUnretained(self).toOpaque())")
     }
 
-    func activate() {
-        createPublisher(for: viewModel.numberFlow)
-            .sink { completion in
-                log.i(message_: "Number flow completion: \(completion)")
-            } receiveValue: { [weak self] number in
-                self?.number = number.intValue
-            }
-            .store(in: &cancellables)
 
-        createPublisher(for: viewModel.exampleResultFlow)
-            .sink { completion in
-                log.i(message_: "result: \(completion)")
-            } receiveValue: { [weak self] result in
-                log.i(message_: "result: \(result)")
-                self?.result = result
+    // TODO can this be merged with result?
+    @MainActor
+    func listenToNumbers() async {
+        do {
+            let sequence = asyncSequence(for: viewModel.numberFlow)
+            for try await number in sequence {
+                self.number = number.intValue
             }
-            .store(in: &cancellables)
+        } catch {
+            print("Async numberFlow Failed with error: \(error)")
+        }
+    }
+
+    // TODO can this be merged with numbers?
+    @MainActor
+    func listenToResults() async {
+        do {
+            let sequence = asyncSequence(for: viewModel.exampleResultFlow)
+            for try await result in sequence {
+                log.i(message_: "result: \(result)")
+                self.result = result
+            }
+        } catch {
+            print("Async exampleResultFlow Failed with error: \(error)")
+        }
     }
 
     func cancel() {
+        // TODO can it be cancelled manually
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
     }
 
-    func throwException() {
+    func throwException() async {
         let suspend = viewModel.throwException()
-        log.i(message_: "future exception start")
-        createFuture(for: suspend)
-            .sink { completion in
-                log.i(message_: "future exception completion \(completion)")
-            } receiveValue: { value in
-                log.i(message_: "future exception recieveValue \(value)")
-            }.store(in: &cancellables)
+        log.i(message_: "async function exception start")
+        let result = await asyncResult(for: suspend)
+        switch result {
+        case .success(let value):
+            log.i(message_: "async function exception success \(value)")
+        case .failure(let error):
+            log.i(message_: "async function exception failure \(error)")
+        }
+        log.i(message_: "async function exception end")
 
-        createPublisher(for: viewModel.errorFlow)
-            .sink { completion in
-                log.i(message_: "publisher exception completion \(completion)")
-            } receiveValue: { number in
-                log.i(message_: "publisher exception recieveValue \(number)")
+        log.i(message_: "async sequence exception start")
+        do {
+            let sequence = asyncSequence(for: viewModel.errorFlow)
+            for try await number in sequence {
+                log.i(message_: "async sequence exception number: \(number)")
             }
-            .store(in: &cancellables)
+        } catch {
+            print("async sequence exception error: \(error)")
+        }
+        log.i(message_: "async sequence exception end")
     }
 
     func generateResult() {
@@ -74,10 +89,10 @@ private class CoroutinesExampleModel: ObservableObject {
     }
 }
 
-struct CoroutinesExampleScreen: View {
+struct CoroutinesAsyncExampleScreen: View {
 
     @StateObject
-    private var observableModel = CoroutinesExampleModel()
+    private var observableModel = CoroutinesAsyncExampleModel()
 
     var body: some View {
         NavigationView {
@@ -93,17 +108,22 @@ struct CoroutinesExampleScreen: View {
 
                 Spacer()
                 Button("Throw Exception") {
-                    observableModel.throwException()
+                    Task {
+                        await observableModel.throwException()
+                    }
                 }
                 Spacer()
-                NavigationLink("Open in a new screen", destination: { CoroutinesExampleScreen() })
+                NavigationLink("Open in a new screen", destination: { CoroutinesCombineExampleScreen() })
                 Spacer()
             }
         }.navigationViewStyle(StackNavigationViewStyle()) // Needed for deinit to work correclty...
-            .onAppear(perform: {
+            .task {
                 print("onAppear \(observableModel)")
-                observableModel.activate()
-            })
+                await observableModel.listenToNumbers()
+            }
+            .task {
+                await observableModel.listenToResults()
+            }
             .onDisappear(perform: {
                 print("onDisappear")
                 log.i(message_: "cancellables count: \(observableModel.cancellables.count)")
@@ -113,7 +133,7 @@ struct CoroutinesExampleScreen: View {
     }
 }
 
-struct ResultView: View {
+private struct ResultView: View {
 
     var result: ExampleResult
     var onClick: () -> Void
