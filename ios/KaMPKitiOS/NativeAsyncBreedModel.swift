@@ -84,11 +84,9 @@ struct NativeAsyncBreedListScreen: View {
             }
         )
         .task {
-            print("Async onAppear")
             await observableModel.activate()
         }
         .onDisappear(perform: {
-            print("Async onDisappear")
             observableModel.deactivate()
         })
     }

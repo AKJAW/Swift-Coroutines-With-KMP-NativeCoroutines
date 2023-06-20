@@ -6,6 +6,7 @@ import KMPNativeCoroutinesAsync
 
 private let log = koin.loggerWithTag(tag: "CoroutinesExampleViewModel")
 
+@MainActor
 private class CoroutinesAsyncExampleModel: ObservableObject {
     private let viewModel: CoroutinesExampleViewModel = KotlinDependencies.shared.getCoroutinesExampleViewModel()
 
@@ -15,7 +16,7 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
     @Published
     var result: ExampleResult
 
-    var cancellables = [AnyCancellable]()
+    var numberTask: Task<(), Never>?
 
     init() {
         result = viewModel.exampleResult
@@ -27,21 +28,23 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
     }
 
 
-    // TODO can this be merged with result?
-    @MainActor
     func listenToNumbers() async {
-        do {
-            let sequence = asyncSequence(for: viewModel.numberFlow)
-            for try await number in sequence {
-                self.number = number.intValue
+        if numberTask != nil {
+            return
+        }
+
+        numberTask = Task {
+            do {
+                let sequence = asyncSequence(for: viewModel.numberFlow)
+                for try await number in sequence {
+                    self.number = number.intValue
+                }
+            } catch {
+                print("Async numberFlow Failed with error: \(error)")
             }
-        } catch {
-            print("Async numberFlow Failed with error: \(error)")
         }
     }
 
-    // TODO can this be merged with numbers?
-    @MainActor
     func listenToResults() async {
         do {
             let sequence = asyncSequence(for: viewModel.exampleResultFlow)
@@ -55,9 +58,8 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
     }
 
     func cancel() {
-        // TODO can it be cancelled manually
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
+        numberTask?.cancel()
+        numberTask = nil
     }
 
     func throwException() async {
@@ -126,9 +128,9 @@ struct CoroutinesAsyncExampleScreen: View {
             }
             .onDisappear(perform: {
                 print("onDisappear")
-                log.i(message_: "cancellables count: \(observableModel.cancellables.count)")
-                // Not needed with StackNavigationViewStyle
-                // observableModel.cancel()
+                log.i(message_: "numberTask: \(String(describing: observableModel.numberTask))")
+                // Only needed for root screen, the nested screens are cleared by the UI
+//                observableModel.cancel()
             })
     }
 }
