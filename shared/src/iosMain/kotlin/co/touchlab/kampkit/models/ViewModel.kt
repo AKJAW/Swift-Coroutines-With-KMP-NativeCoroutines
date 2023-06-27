@@ -16,7 +16,7 @@ actual abstract class ViewModel {
 
     @NativeCoroutineScope
     actual val viewModelScope =
-        MainScope() // TODO doesn't work with async?
+        MainScope() // TODO doesn't work with async? - Kotlin Collection happens on this thread, but later everything is happening on the Task thread
 
     /**
      * Override this to do any cleanup immediately before the internal [CoroutineScope][kotlinx.coroutines.CoroutineScope]

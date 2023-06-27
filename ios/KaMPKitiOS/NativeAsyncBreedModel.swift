@@ -60,9 +60,34 @@ private class NativeAsyncBreedModel: ObservableObject {
         let suspend = viewModel.nativeRefreshBreeds()
         do {
             let value = try await asyncFunction(for: suspend)
-            print("Async Got value \(value)")
+            print("Async Success: \(value)")
         } catch {
             print("Async Failed with error: \(error)")
+        }
+    }
+
+    func refresh2() async {
+        guard let viewModel = self.viewModel else {
+            return
+        }
+        let suspend = viewModel.nativeRefreshBreeds()
+        let result = await asyncResult(for: suspend)
+        switch result {
+        case .success(let value):
+            print("Async Success: \(value)")
+        case .failure(let error):
+            print("Async Failed with error: \(error)")
+        }
+    }
+
+    func refresh3() async {
+        guard let viewModel = self.viewModel else {
+            return
+        }
+        let suspend = viewModel.nativeRefreshBreeds()
+        let result = await asyncResult(for: suspend)
+        if case .success(let value) = result {
+            print("Async Success: \(value)")
         }
     }
 }
@@ -79,7 +104,7 @@ struct NativeAsyncBreedListScreen: View {
             onBreedFavorite: { observableModel.onBreedFavorite($0) },
             refresh: {
                 Task {
-                    await observableModel.refresh()
+                    await observableModel.refresh3()
                 }
             }
         )

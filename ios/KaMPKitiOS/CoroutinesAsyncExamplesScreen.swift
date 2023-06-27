@@ -27,7 +27,6 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
         log.i(message_: "deinit \(Unmanaged.passUnretained(self).toOpaque())")
     }
 
-
     func listenToNumbers() async {
         if numberTask != nil {
             return
@@ -42,18 +41,15 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
             } catch {
                 print("Async numberFlow Failed with error: \(error)")
             }
+            print("Async numberFlow completed")
         }
     }
 
-    func listenToResults() async {
-        do {
-            let sequence = asyncSequence(for: viewModel.exampleResultFlow)
-            for try await result in sequence {
-                log.i(message_: "result: \(result)")
-                self.result = result
-            }
-        } catch {
-            print("Async exampleResultFlow Failed with error: \(error)")
+    func listenToResults() async throws {
+        let sequence = asyncSequence(for: viewModel.exampleResultFlow)
+        for try await result in sequence {
+            log.i(message_: "result: \(result)")
+            self.result = result
         }
     }
 
@@ -124,7 +120,7 @@ struct CoroutinesAsyncExampleScreen: View {
                 await observableModel.listenToNumbers()
             }
             .task {
-                await observableModel.listenToResults()
+                try? await observableModel.listenToResults()
             }
             .onDisappear(perform: {
                 print("onDisappear")
