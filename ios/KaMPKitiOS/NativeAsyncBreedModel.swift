@@ -16,7 +16,7 @@ private class NativeAsyncBreedModel: ObservableObject {
     @Published
     var error: String?
 
-    @MainActor // TODO needed even with NativeCoroutinesState?
+    @MainActor
     func activate() async {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
@@ -40,6 +40,29 @@ private class NativeAsyncBreedModel: ObservableObject {
             }
         } catch {
             print("Async Failed with error: \(error)")
+        }
+    }
+
+    @MainActor
+    func activate2() async throws {
+        let viewModel = KotlinDependencies.shared.getBreedViewModel()
+
+        let nativeFlow = viewModel.nativeBreedStateFlow
+
+        self.viewModel = viewModel
+
+        let sequence = asyncSequence(for: nativeFlow)
+        for try await dogsState in sequence {
+            self.loading = dogsState.isLoading
+            self.breeds = dogsState.breeds
+            self.error = dogsState.error
+
+            if let breeds = dogsState.breeds {
+                print("Async View updating with \(breeds.count) breeds")
+            }
+            if let errorMessage = dogsState.error {
+                print("Async Displaying error: \(errorMessage)")
+            }
         }
     }
 
@@ -109,7 +132,7 @@ struct NativeAsyncBreedListScreen: View {
             }
         )
         .task {
-            await observableModel.activate()
+            try? await observableModel.activate2()
         }
         .onDisappear(perform: {
             observableModel.deactivate()

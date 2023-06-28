@@ -20,11 +20,11 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
 
     init() {
         result = viewModel.exampleResult
-        log.i(message_: "init \(Unmanaged.passUnretained(self).toOpaque())")
+        log.i(message_: "Async init \(Unmanaged.passUnretained(self).toOpaque())")
     }
 
     deinit {
-        log.i(message_: "deinit \(Unmanaged.passUnretained(self).toOpaque())")
+        log.i(message_: "Async deinit \(Unmanaged.passUnretained(self).toOpaque())")
     }
 
     func listenToNumbers() async {
@@ -60,12 +60,12 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
 
     func throwException() async {
         let suspend = viewModel.throwException()
+
         log.i(message_: "async function exception start")
-        let result = await asyncResult(for: suspend)
-        switch result {
-        case .success(let value):
-            log.i(message_: "async function exception success \(value)")
-        case .failure(let error):
+        do {
+            let result = try await asyncFunction(for: suspend)
+            log.i(message_: "async function exception success \(result)")
+        } catch {
             log.i(message_: "async function exception failure \(error)")
         }
         log.i(message_: "async function exception end")
@@ -78,6 +78,27 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
             }
         } catch {
             print("async sequence exception error: \(error)")
+        }
+        log.i(message_: "async sequence exception end")
+    }
+
+    func throwException2() async throws {
+        let suspend = viewModel.throwException()
+
+        log.i(message_: "async function exception start")
+        let result = await asyncResult(for: suspend)
+        switch result {
+        case .success(let value):
+            log.i(message_: "async function exception success \(value)")
+        case .failure(let error):
+            log.i(message_: "async function exception failure \(error)")
+        }
+        log.i(message_: "async function exception end")
+
+        log.i(message_: "async sequence exception start")
+        let sequence = asyncSequence(for: viewModel.errorFlow)
+        for try await number in sequence {
+            log.i(message_: "async sequence exception number: \(number)")
         }
         log.i(message_: "async sequence exception end")
     }
@@ -107,11 +128,13 @@ struct CoroutinesAsyncExampleScreen: View {
                 Spacer()
                 Button("Throw Exception") {
                     Task {
-                        await observableModel.throwException()
+//                        await observableModel.throwException()
+                        try? await observableModel.throwException2()
                     }
                 }
                 Spacer()
-                NavigationLink("Open in a new screen", destination: { CoroutinesCombineExampleScreen() })
+                // TODO doesn't work
+                NavigationLink("Open in a new screen", destination: { CoroutinesAsyncExampleScreen() })
                 Spacer()
             }
         }.navigationViewStyle(StackNavigationViewStyle()) // Needed for deinit to work correclty...
