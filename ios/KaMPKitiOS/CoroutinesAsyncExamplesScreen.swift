@@ -133,7 +133,6 @@ struct CoroutinesAsyncExampleScreen: View {
                     }
                 }
                 Spacer()
-                // TODO doesn't work
                 NavigationLink("Open in a new screen", destination: { CoroutinesAsyncExampleScreen() })
                 Spacer()
             }
@@ -148,8 +147,8 @@ struct CoroutinesAsyncExampleScreen: View {
             .onDisappear(perform: {
                 print("onDisappear")
                 log.i(message_: "numberTask: \(String(describing: observableModel.numberTask))")
-                // Only needed for root screen, the nested screens are cleared by the UI
-//                observableModel.cancel()
+                // Needed when numberTask is created
+                observableModel.cancel()
             })
     }
 }
