@@ -35,23 +35,23 @@ private class CoroutineBreedModel: ObservableObject {
     func activate() {
         let viewModel = KotlinDependencies.shared.getBreedViewModel()
 
-viewModel.breedState.collect(
-    collector: Collector<BreedViewState> { [weak self] dogsState in
-        self?.loading = dogsState.isLoading
-        self?.breeds = dogsState.breeds
-        self?.error = dogsState.error
+    viewModel.breedState.collect(
+        collector: Collector<BreedViewState> { [weak self] dogsState in
+            self?.loading = dogsState.isLoading
+            self?.breeds = dogsState.breeds
+            self?.error = dogsState.error
 
-        if let breeds = dogsState.breeds {
-            print("View updating with \(breeds.count) breeds")
+            if let breeds = dogsState.breeds {
+                print("View updating with \(breeds.count) breeds")
+            }
+            if let errorMessage = dogsState.error {
+                print("Displaying error: \(errorMessage)")
+            }
+        },
+        completionHandler: { error in
+            print("breed collection completion error: \(error)")
         }
-        if let errorMessage = dogsState.error {
-            print("Displaying error: \(errorMessage)")
-        }
-    },
-    completionHandler: { error in
-        print("breed collection completion error: \(error)")
-    }
-)
+    )
 
         self.viewModel = viewModel
     }

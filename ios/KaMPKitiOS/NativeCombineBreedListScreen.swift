@@ -25,22 +25,22 @@ private class NativeCombineBreedModel: ObservableObject {
         createPublisher(for: nativeFlow)
             // .receive(on: DispatchQueue.main) // Not needed with @NativeCoroutineScope
             .sink { completion in
-                print("Breeds completion: \(completion)")
+                print("Combine Breeds completion: \(completion)")
             } receiveValue: { [weak self] dogsState in
                 self?.loading = dogsState.isLoading
                 self?.breeds = dogsState.breeds
                 self?.error = dogsState.error
 
                 if let breeds = dogsState.breeds {
-                    print("View updating with \(breeds.count) breeds")
+                    print("Combine View updating with \(breeds.count) breeds")
                 }
                 if let errorMessage = dogsState.error {
-                    print("Displaying error: \(errorMessage)")
+                    print("Combine Displaying error: \(errorMessage)")
                 }
             }
             .store(in: &cancellables)
 
-        print("cancellables count: \(self.cancellables.count)")
+        print("Combine cancellables count: \(self.cancellables.count)")
         self.viewModel = viewModel
     }
 
@@ -64,9 +64,9 @@ private class NativeCombineBreedModel: ObservableObject {
         let suspend = viewModel.nativeRefreshBreeds()
         createFuture(for: suspend)
             .sink { completion in
-                print("completion \(completion)")
+                print("Combine completion \(completion)")
             } receiveValue: { value in
-                print("recieveValue \(value)")
+                print("Combine recieveValue \(value)")
             }.store(in: &cancellables)
     }
 }
@@ -84,11 +84,11 @@ struct NativeCombineBreedListScreen: View {
             refresh: { observableModel.refresh() }
         )
         .onAppear(perform: {
-            print("onAppear")
+            print("Combine onAppear")
             observableModel.activate()
         })
         .onDisappear(perform: {
-            print("onDisappear")
+            print("Combine onDisappear")
             observableModel.deactivate()
         })
     }

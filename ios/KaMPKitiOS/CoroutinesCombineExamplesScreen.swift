@@ -6,7 +6,7 @@ import KMPNativeCoroutinesCombine
 
 private let log = koin.loggerWithTag(tag: "CoroutinesExampleViewModel")
 
-private class CoroutinesExampleModel: ObservableObject {
+private class CoroutinesCombineExampleModel: ObservableObject {
     private let viewModel: CoroutinesExampleViewModel = KotlinDependencies.shared.getCoroutinesExampleViewModel()
 
     @Published
@@ -19,17 +19,17 @@ private class CoroutinesExampleModel: ObservableObject {
 
     init() {
         result = viewModel.exampleResult
-        log.i(message_: "init \(Unmanaged.passUnretained(self).toOpaque())")
+        log.i(message_: "Combine init \(Unmanaged.passUnretained(self).toOpaque())")
     }
 
     deinit {
-        log.i(message_: "deinit \(Unmanaged.passUnretained(self).toOpaque())")
+        log.i(message_: "Combine deinit \(Unmanaged.passUnretained(self).toOpaque())")
     }
 
     func activate() {
         createPublisher(for: viewModel.numberFlow)
             .sink { completion in
-                log.i(message_: "Number flow completion: \(completion)")
+                log.i(message_: "Combine Number flow completion: \(completion)")
             } receiveValue: { [weak self] number in
                 self?.number = number.intValue
             }
@@ -37,9 +37,9 @@ private class CoroutinesExampleModel: ObservableObject {
 
         createPublisher(for: viewModel.exampleResultFlow)
             .sink { completion in
-                log.i(message_: "result: \(completion)")
+                log.i(message_: "Combine result: \(completion)")
             } receiveValue: { [weak self] result in
-                log.i(message_: "result: \(result)")
+                log.i(message_: "Combine result: \(result)")
                 self?.result = result
             }
             .store(in: &cancellables)
@@ -52,19 +52,19 @@ private class CoroutinesExampleModel: ObservableObject {
 
     func throwException() {
         let suspend = viewModel.throwException()
-        log.i(message_: "future exception start")
+        log.i(message_: "Combine future exception start")
         createFuture(for: suspend)
             .sink { completion in
-                log.i(message_: "future exception completion \(completion)")
+                log.i(message_: "Combine future exception completion \(completion)")
             } receiveValue: { value in
-                log.i(message_: "future exception recieveValue \(value)")
+                log.i(message_: "Combine future exception recieveValue \(value)")
             }.store(in: &cancellables)
 
         createPublisher(for: viewModel.errorFlow)
             .sink { completion in
-                log.i(message_: "publisher exception completion \(completion)")
+                log.i(message_: "Combine publisher exception completion \(completion)")
             } receiveValue: { number in
-                log.i(message_: "publisher exception recieveValue \(number)")
+                log.i(message_: "Combine publisher exception recieveValue \(number)")
             }
             .store(in: &cancellables)
     }
@@ -74,10 +74,10 @@ private class CoroutinesExampleModel: ObservableObject {
     }
 }
 
-struct CoroutinesExampleScreen: View {
+struct CoroutinesCombineExampleScreen: View {
 
     @StateObject
-    private var observableModel = CoroutinesExampleModel()
+    private var observableModel = CoroutinesCombineExampleModel()
 
     var body: some View {
         NavigationView {
@@ -96,24 +96,24 @@ struct CoroutinesExampleScreen: View {
                     observableModel.throwException()
                 }
                 Spacer()
-                NavigationLink("Open in a new screen", destination: { CoroutinesExampleScreen() })
+                NavigationLink("Open in a new screen", destination: { CoroutinesCombineExampleScreen() })
                 Spacer()
             }
         }.navigationViewStyle(StackNavigationViewStyle()) // Needed for deinit to work correclty...
             .onAppear(perform: {
-                print("onAppear \(observableModel)")
+                print("Combine onAppear \(observableModel)")
                 observableModel.activate()
             })
             .onDisappear(perform: {
-                print("onDisappear")
+                print("Combine onDisappear")
                 log.i(message_: "cancellables count: \(observableModel.cancellables.count)")
-                // Not needed with StackNavigationViewStyle
-                // observableModel.cancel()
+                // Only needed for root screen, the nested screens are cleared by AnyCancellable
+//                 observableModel.cancel()
             })
     }
 }
 
-struct ResultView: View {
+private struct ResultView: View {
 
     var result: ExampleResult
     var onClick: () -> Void
