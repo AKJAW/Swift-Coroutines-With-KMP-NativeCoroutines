@@ -54,6 +54,7 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
     }
 
     func cancel() {
+        viewModel.clear()
         numberTask?.cancel()
         numberTask = nil
     }
@@ -77,7 +78,7 @@ private class CoroutinesAsyncExampleModel: ObservableObject {
                 log.i(message_: "async sequence exception number: \(number)")
             }
         } catch {
-            print("async sequence exception error: \(error)")
+            log.i(message_: "async sequence exception error: \(error)")
         }
         log.i(message_: "async sequence exception end")
     }
@@ -128,8 +129,8 @@ struct CoroutinesAsyncExampleScreen: View {
                 Spacer()
                 Button("Throw Exception") {
                     Task {
-//                        await observableModel.throwException()
-                        try? await observableModel.throwException2()
+                        await observableModel.throwException()
+//                        try? await observableModel.throwException2()
                     }
                 }
                 Spacer()

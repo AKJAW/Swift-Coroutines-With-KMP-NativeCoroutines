@@ -22,31 +22,31 @@ struct ContentView: View {
 
     var body: some View {
         TabView(selection: $selection) {
-//            CoroutinesBreedListScreen()
-//                .tabItem {
-//                    Label("Coroutines", systemImage: "list.dash")
-//                }
-//                .tag(Tab.coroutines)
-//            AdapterBreedListScreen()
-//                .tabItem {
-//                    Label("Adapter", systemImage: "list.dash")
-//                }
-//                .tag(Tab.adapter)
-            NativeCombineBreedListScreen()
+            CoroutinesBreedListScreen()
                 .tabItem {
-                    Label("Combine", systemImage: "list.dash")
+                    Label("Coroutines", systemImage: "list.dash")
                 }
-                .tag(Tab.combine)
+                .tag(Tab.coroutines)
+            AdapterBreedListScreen()
+                .tabItem {
+                    Label("Adapter", systemImage: "list.dash")
+                }
+                .tag(Tab.adapter)
+//            NativeCombineBreedListScreen()
+//                .tabItem {
+//                    Label("Combine", systemImage: "list.dash")
+//                }
+//                .tag(Tab.combine)
             NativeAsyncBreedListScreen()
                 .tabItem {
                     Label("Async", systemImage: "list.dash")
                 }
                 .tag(Tab.async)
-            CoroutinesCombineExampleScreen()
-                .tabItem {
-                    Label("Combine Examples", systemImage: "list.dash")
-                }
-                .tag(Tab.combineExample)
+//            CoroutinesCombineExampleScreen()
+//                .tabItem {
+//                    Label("Combine Examples", systemImage: "list.dash")
+//                }
+//                .tag(Tab.combineExample)
             CoroutinesAsyncExampleScreen()
                 .tabItem {
                     Label("Async Examples", systemImage: "list.dash")
